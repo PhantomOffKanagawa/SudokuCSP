@@ -34,7 +34,7 @@ public class CSP {
         int varIndex = SelectUnassignedVariable();
         System.out.printf(" Trying to set variable %d, tree length %d, current value %d%n", varIndex, tree.size(), board.getSquare(varIndex).getValue());
 
-        // ! Debug shit
+        // ! Debug ****
         // if (varIndex <= 72) printSquare();
 
         // * for each value in order-domain-values
