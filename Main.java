@@ -44,5 +44,6 @@ public class Main {
         CSP boardAStrategy = new CSP(boardA);
         boardAStrategy.run();
         boardAStrategy.printSquare();
+        boardAStrategy.printInfo();
     }
 }

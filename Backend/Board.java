@@ -36,6 +36,7 @@ public class Board {
     return remainingVariables.size();
   }
 
+  // * Sets remainingVariables to their initial
   protected void initializeRemainingVariables() {
     for (int i = 0; i < 81; i++) {
       if (!hasSet(i))
@@ -43,10 +44,18 @@ public class Board {
     }
   }
 
+  /*
+   * FUNCTIONS NEEDED FOR CSP
+   */
+
+  // * Function to handle returning the next best variable to set
   protected Variable nextVariable() {
+    // * remainingVariables is a stack with all remaining empty variables
+    // * The compareTo function of the Variable object handles selecting the best variable
     return remainingVariables.poll();
   }
 
+  // * Helper function to consistencyCheck that returns if a variable will work
   private boolean isConsistent(int index, int value, int indexToCompare) {
     if (!hasSet(indexToCompare))
       return true;
@@ -55,6 +64,7 @@ public class Board {
     return true;
   }
 
+  // * Function to check if a value at an index is consistent
   protected boolean consistencyCheck(int index, int value) {
     // * Check Vertical Line Constraints
     for (int i = 1; i < yFromIndex(index); i++) {
@@ -98,6 +108,19 @@ public class Board {
     return true;
   }
 
+/* 
+ * BOARD GETTER SETTERS
+ */
+
+  // * Get the set value of a passed square
+  protected Square getSquare(int x, int y) {
+    return sudokuBoard[indexFromCoords(x, y)];
+  }
+
+  protected Square getSquare(int i) {
+    return sudokuBoard[i];
+  }
+
   // * Sets the value of a square and related info
   public void setSquare(int x, int y, int v) {
     sudokuBoard[indexFromCoords(x, y)].setValue(v);
@@ -107,16 +130,9 @@ public class Board {
     sudokuBoard[i].setValue(v);
   }
 
-  public void testCoords() {
-    System.out.printf("%d, %d Expected, %d, %d Actual %n", 0, 0, indexFromCoords(2, 2) / 27,
-        indexFromCoords(2, 2) % 9 / 3);
-    System.out.printf("%d, %d Expected, %d, %d Actual %n", 3, 3, (indexFromCoords(1, 4)) / 27 * 3,
-        indexFromCoords(9, 4) % 9 / 3 * 3);
-    // System.out.printf("%d Expected, %d Actual %n", 8,
-    // yFromIndex(indexFromCoords(4, 9)));
-    // System.out.printf("%d Expected, %d Actual %n", 3,
-    // xFromIndex(indexFromCoords(4, 9)));
-  }
+  /*
+   * INDEX MANIPULATION FOR 1-BASED ORDERED PAIR TO 0-BASED ARRAY INDEX
+   */
 
   protected int indexFromCoords(int x, int y) {
     return 9 * (y - 1) + (x - 1);
@@ -130,14 +146,9 @@ public class Board {
     return i % 9 + 1;
   }
 
-  // * Get the set value of a passed square
-  protected Square getSquare(int x, int y) {
-    return sudokuBoard[indexFromCoords(x, y)];
-  }
-
-  protected Square getSquare(int i) {
-    return sudokuBoard[i];
-  }
+  /*
+   * HELPER FUNCTIONS FOR SQUARE AND BOARD DATA
+   */
 
   // * Check if the board has a square set
   protected boolean hasSet(int x, int y) {
@@ -151,6 +162,10 @@ public class Board {
   protected boolean isFull() {
     return (remainingVariables.size() == 0);
   }
+
+  /*
+   * PRINT FUNCTIONS
+   */
 
   protected void printSquare() {
     System.out.println("-------------------------------------------------------");

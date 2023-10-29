@@ -4,7 +4,7 @@ package Backend;
 public class Variable implements Comparable<Variable> {
   private final byte index;
   private byte value;
-  
+
   public Variable(int index, int value) {
     this.index = (byte) index;
     this.value = (byte) value;
@@ -22,22 +22,28 @@ public class Variable implements Comparable<Variable> {
     this.value = value;
   }
 
-  
-    // Overriding compareTo() method
-    @Override public int compareTo(Variable o)
-    {
-        if (this.value > o.value) {
- 
-            return -1;
+  // Overriding compareTo() method
+  @Override
+  public int compareTo(Variable o) {
+    if (this.value > o.value) {
+      return -1;
+    } else if (this.value < o.value) {
+      return 1;
+    } else {
+      if (this.index % 9 > o.index % 9) {
+        return 1;
+      } else if (this.index % 9 < o.index % 9) {
+        return -1;
+      } else {
+        if (this.index / 9 > o.index / 9) {
+          return 1;
+        } else if (this.index / 9 < o.index / 9) {
+          return -1;
+        } else {
+          return 0;
         }
-        else if (this.value < o.value) {
- 
-            return 1;
-        }
-        else {
- 
-            return 0;
-        }
+      }
     }
+  }
 
 }
