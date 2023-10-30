@@ -1,6 +1,7 @@
 package Backend;
 
 import java.text.NumberFormat;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -10,7 +11,7 @@ public class CSP {
     // tracking generated nodes, and tracking which player went last
     private Board board;
     long time;
-    int assignmentsPrinted = 4;
+    int assignmentsPrinted = 5;
 
     private final Stack<Board> tree = new Stack<Board>();
 
@@ -28,35 +29,35 @@ public class CSP {
     }
 
     private boolean RecursiveBacktracking() {
+        if (assignmentsPrinted > 0) {
+            if (assignmentsPrinted != 5)
+                System.out.printf("Square %d, %d has a domain size of %d and degree of %d and is being assigned %d%n",
+                        board.xFromIndex(board.lastIndex), board.yFromIndex(board.lastIndex),
+                        board.getSquare(board.lastIndex).getDomainCount(), board.getSquare(board.lastIndex).getDegree(),
+                        board.lastValue);
+            assignmentsPrinted--;
+        }
+
         // * if assignment is complete then return assignment
-        // TODO Final Compliancy Check?
         if (board.isFull())
             return true;
 
         // * select unassigned variable
         int varIndex = SelectUnassignedVariable();
-        // ! System.out.printf(" Trying to set variable %d, tree length %d, current
-        // value %d%n", varIndex, tree.size(), board.getSquare(varIndex).getValue());
+        // System.out.printf(" Trying to set variable %d, tree length %d, current value
+        // %d%n", varIndex, tree.size(), board.getSquare(varIndex).getValue());
 
         // ! Debug ****
         // if (varIndex <= 72) printSquare();
 
         // * for each value in order-domain-values
         for (int value : OrderDomainValues(varIndex)) {
-            if (consistencyCheck(varIndex, value)) {
+            Board newBoard = new Board(board);
+            if (newBoard.setSquare(varIndex, value)) {
                 // System.out.printf(" Value %d works%n", value);
-                if (assignmentsPrinted > 0) {
-                    System.out.printf("Square %d, %d has a domain of %d and degree of %d and is being assigned %d%n",
-                            board.xFromIndex(varIndex), board.yFromIndex(varIndex),
-                            board.getSquare(varIndex).getDomain().length, 0, value);
-                    assignmentsPrinted--;
-                }
-
-                tree.add(new Board(board, varIndex, value));
+                tree.add(newBoard);
             }
         }
-
-        // TODO inferences <- INFERENCE etc.
 
         board = tree.pop();
 
@@ -77,10 +78,6 @@ public class CSP {
         }
 
         return domainValues;
-    }
-
-    private boolean consistencyCheck(int index, int value) {
-        return board.consistencyCheck(index, value);
     }
 
     public void printInfo() {
